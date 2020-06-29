@@ -1,5 +1,4 @@
 #include <iostream>
-#include <memory>
 
 #include "GL-Core/GLCore.h"
 using namespace GLCore;
@@ -12,8 +11,8 @@ public:
 
 int main()
 {
-    std::cout << "Hello World!\n";
     std::unique_ptr<BatchRendererApp> app = std::make_unique<BatchRendererApp>();
+    LOG_ERROR("Hello");
     app->Run();
 
 }
