@@ -16,18 +16,15 @@ namespace GLCore
 		}
 		GLCORE_ASSERT(!s_Instance, "Application aleady exists")
 		s_Instance = this;
+
+		m_Window = std::unique_ptr<Window>(Window::Create({ i_Name,i_Width,i_Height }));
 	}
 	void Application::Run()
 	{
-		KeyPressedEvent K(2, 23);
-		LOG_TRACE(K);
-		MouseButtonPressedEvent mb(23);
-		LOG_INFO(mb);
-		WindowResizeEvent wr(100, 200);
-		LOG_WARN(wr);
-		while (1)
+		LOG_INFO("Application Run Begin");
+		while (m_Running)
 		{
-
+			m_Window->OnUpdate();
 		}
 	}
 }
