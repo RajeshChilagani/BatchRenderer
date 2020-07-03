@@ -1,10 +1,11 @@
 #include "Application.h"
 
+#include <functional>
+
 #include "Core.h"
 #include "Log.h"
 #include "GL-Core/Events/KeyEvent.h"
 #include "GL-Core/Events/MouseEvent.h"
-#include "GL-Core/Events/ApplicationEvent.h"
 namespace GLCore
 {
 	Application* Application::s_Instance = nullptr;
@@ -18,13 +19,49 @@ namespace GLCore
 		s_Instance = this;
 
 		m_Window = std::unique_ptr<Window>(Window::Create({ i_Name,i_Width,i_Height }));
+		m_Window->SetEventCallback(GL_CORE_BIND_EVENT_FN(Application::OnEvent));
 	}
 	void Application::Run()
 	{
 		LOG_INFO("Application Run Begin");
 		while (m_Running)
 		{
+			for (Layer* layer : m_LayerStack)
+				layer->OnUpdate();
 			m_Window->OnUpdate();
 		}
+	}
+	
+	void Application::OnEvent(Event& e)
+	{
+		LOG_TRACE(e);
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<WindowCloseEvent>(GL_CORE_BIND_EVENT_FN(Application::OnWindowClose));
+
+		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
+		{
+			(*--it)->OnEvent(e);
+			if (e.Handled())
+			{
+				LOG_INFO("{0} Handled", e);
+				break;
+			}
+		}
+	}
+
+	void Application::PushLayer(Layer* layer)
+	{
+		m_LayerStack.PushLayer(layer);
+	}
+
+	void Application::PushOverlay(Layer* overlay)
+	{
+		m_LayerStack.PushOverlay(overlay);
+	}
+
+	bool Application::OnWindowClose(WindowCloseEvent& event)
+	{
+		m_Running = false;
+		return true;
 	}
 }

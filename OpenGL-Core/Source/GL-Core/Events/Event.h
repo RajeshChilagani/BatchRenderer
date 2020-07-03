@@ -42,8 +42,9 @@ namespace GLCore
 		{
 			return GetCategoryFlags() & category;
 		}
+		inline bool Handled() const { return m_Handled; }
 	private:
-		bool m_Handled;
+		bool m_Handled=false;
 		friend class EventDispatcher;
 	};
 
