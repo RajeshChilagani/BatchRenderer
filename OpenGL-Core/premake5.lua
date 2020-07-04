@@ -22,12 +22,14 @@ project "OpenGL-Core"
     {
         "Source",
         "Vendor/spdlog/include",
-        "%{IncludeDir.GLFW}"
+        "%{IncludeDir.GLFW}",
+        "%{IncludeDir.Glad}"
     }
 
     links
     {
         "GLFW",
+        "Glad",
         "opengl32.lib"
     }
 
@@ -36,7 +38,8 @@ project "OpenGL-Core"
 
 		defines
 		{
-			"GLCORE_PLATFORM_WINDOWS"
+            "GLCORE_PLATFORM_WINDOWS",
+            "GLFW_INCLUDE_NONE"
         }
     
     filter "configurations:Debug"

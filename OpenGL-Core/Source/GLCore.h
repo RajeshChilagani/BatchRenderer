@@ -4,4 +4,4 @@
 #include "GL-Core/Core/Log.h"
 #include "GL-Core/Core/Layer.h"
 
-#include <GLFW/glfw3.h>
+#include <Glad/include/glad/glad.h>

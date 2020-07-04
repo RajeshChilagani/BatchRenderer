@@ -7,6 +7,8 @@
 #include "GL-Core/Events/KeyEvent.h"
 #include "GL-Core/Events/MouseEvent.h"
 
+#include <glad/glad.h>
+
 
 namespace GLCore
 {
@@ -50,6 +52,9 @@ namespace GLCore
 		}
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, props.Title.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(m_Window);
+
+		int gladStatus = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
+		GLCORE_ASSERT(gladStatus, "Failed to Initialize Glad!");
 
 		LOG_INFO("OpenGL Info:");
 		LOG_INFO("  Vendor: {0}", glGetString(GL_VENDOR));
