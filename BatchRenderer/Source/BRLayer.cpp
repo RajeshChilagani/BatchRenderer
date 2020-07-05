@@ -21,6 +21,14 @@ void BRLayer::OnUpdate()
 
 }
 
+void BRLayer::ImGuiRender()
+{
+	ImGui::Begin("Test");
+	static bool show = true;
+	ImGui::ShowDemoWindow(&show);
+	ImGui::End();
+}
+
 void BRLayer::OnEvent(GLCore::Event& e)
 {
 	LOG_TRACE(e);

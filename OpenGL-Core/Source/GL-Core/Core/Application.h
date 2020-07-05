@@ -4,6 +4,7 @@
 #include "Core.h"
 #include "GL-Core/Events/Event.h"
 #include "GL-Core/Events/ApplicationEvent.h"
+#include "GL-Core/ImGui/ImGuiLayer.h"
 #include "LayerStack.h"
 #include "Window.h"
 
@@ -20,6 +21,7 @@ namespace GLCore
 
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* overlay);
+		inline Window& GetWindow() { return *m_Window; }
 		inline static Application& Get() { return *s_Instance; }
 	private:
 		bool OnWindowClose(WindowCloseEvent& event);
@@ -27,6 +29,7 @@ namespace GLCore
 		std::unique_ptr<Window> m_Window;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
+		ImGuiLayer* m_ImGuiLayer;
 	private:
 		static Application* s_Instance;
 	};

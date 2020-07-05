@@ -10,6 +10,7 @@ public:
 	virtual void OnAttach() override;
 	virtual void OnDetach() override;
 	virtual void OnUpdate() override;
+	virtual void ImGuiRender() override;
 	virtual void OnEvent(GLCore::Event& e) override;
 private:
 	

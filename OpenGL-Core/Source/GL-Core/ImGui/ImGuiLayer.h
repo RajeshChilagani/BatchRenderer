@@ -16,6 +16,6 @@ namespace GLCore
 		void Begin();
 		void End();
 	private:
-		float m_Time;
+		//float m_Time;
 	};
 }
