@@ -13,10 +13,12 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["GLFW"] = "Vendor/glfw/include"
 IncludeDir["Glad"] = "Vendor/Glad/include"
+IncludeDir["imgui"] = "Vendor/imgui"
 
 group "Dependencies"
     include "OpenGL-Core/Vendor/glfw"
     include "OpenGL-Core/Vendor/Glad"
+    include "OpenGL-Core/Vendor/imgui"
 group ""
 
 

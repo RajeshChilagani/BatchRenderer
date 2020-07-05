@@ -18,7 +18,8 @@ project "BatchRenderer"
         "../OpenGL-Core/Vendor/spdlog/include",
         "../OpenGL-Core/Source",
         "../OpenGL-Core/Vendor",
-        "../OpenGL-Core/%{IncludeDir.Glad}"
+        "../OpenGL-Core/%{IncludeDir.Glad}",
+        "../OpenGL-Core/%{IncludeDir.imgui}"
     }
 
     links

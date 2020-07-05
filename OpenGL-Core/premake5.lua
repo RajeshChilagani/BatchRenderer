@@ -23,13 +23,15 @@ project "OpenGL-Core"
         "Source",
         "Vendor/spdlog/include",
         "%{IncludeDir.GLFW}",
-        "%{IncludeDir.Glad}"
+        "%{IncludeDir.Glad}",
+        "%{IncludeDir.imgui}"
     }
 
     links
     {
         "GLFW",
         "Glad",
+        "imgui",
         "opengl32.lib"
     }
 
