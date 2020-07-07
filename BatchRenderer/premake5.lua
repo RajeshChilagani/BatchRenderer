@@ -19,7 +19,8 @@ project "BatchRenderer"
         "../OpenGL-Core/Source",
         "../OpenGL-Core/Vendor",
         "../OpenGL-Core/%{IncludeDir.Glad}",
-        "../OpenGL-Core/%{IncludeDir.imgui}"
+        "../OpenGL-Core/%{IncludeDir.imgui}",
+        "../OpenGL-Core/%{IncludeDir.glm}"
     }
 
     links

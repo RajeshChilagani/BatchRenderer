@@ -7,3 +7,6 @@
 [submodule "OpenGL-Core/Vendor/imgui"]
 	path = OpenGL-Core/Vendor/imgui
 	url = https://github.com/TheCherno/imgui
+[submodule "OpenGL-Core/Vendor/glm"]
+	path = OpenGL-Core/Vendor/glm
+	url = https://github.com/g-truc/glm

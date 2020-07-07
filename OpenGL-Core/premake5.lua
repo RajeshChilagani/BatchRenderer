@@ -10,7 +10,11 @@ project "OpenGL-Core"
     files
     {
         "Source/**.h",
-        "Source/**.cpp"
+        "Source/**.cpp",
+        "Vendor/stb_image/**.h",
+		"Vendor/stb_image/**.cpp",
+        "Vendor/glm/glm/**.hpp",
+        "Vendor/glm/glm/**.inl"
     }
 
     defines
@@ -24,7 +28,9 @@ project "OpenGL-Core"
         "Vendor/spdlog/include",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
-        "%{IncludeDir.imgui}"
+        "%{IncludeDir.imgui}",
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.stb_image}"
     }
 
     links

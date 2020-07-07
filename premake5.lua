@@ -14,6 +14,8 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "Vendor/glfw/include"
 IncludeDir["Glad"] = "Vendor/Glad/include"
 IncludeDir["imgui"] = "Vendor/imgui"
+IncludeDir["glm"] = "Vendor/glm"
+IncludeDir["stb_image"] = "Vendor/stb_image"
 
 group "Dependencies"
     include "OpenGL-Core/Vendor/glfw"
