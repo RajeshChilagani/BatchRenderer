@@ -9,12 +9,14 @@ layout(location = 3) in float a_TexIndex;
 out vec4 v_Color;
 out vec2 v_TexCoord;
 out float v_TexIndex;
+
+uniform mat4 u_MVP;
 void main()
 {
 	v_Color = a_Color;
 	v_TexCoord = a_TexCoord;
 	v_TexIndex = a_TexIndex;
-	gl_Position = position;
+	gl_Position = u_MVP * position;
 };
 
 #shader fragment

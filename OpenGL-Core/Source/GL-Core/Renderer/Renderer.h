@@ -6,8 +6,11 @@
 class Renderer
 {
 public:
-	void Clear(unsigned int i_Color) const;
-	void Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
+	static void BeginBatch();
+	static void Endbatch();
+	static void Flush();
+	static void Clear(unsigned int i_Color);
+	static void Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader);
 private:
 };
 

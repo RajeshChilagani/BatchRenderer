@@ -2,11 +2,11 @@
 
 #include "glUtils.h"
 
-void Renderer::Clear(unsigned int i_Color) const
+void Renderer::Clear(unsigned int i_Color) 
 {
 	GLCall(glClear(i_Color));
 }
-void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const
+void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) 
 {
 	va.Bind();
 	ib.Bind();

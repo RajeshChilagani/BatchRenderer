@@ -1,6 +1,7 @@
 #pragma once
 #include "GLCore.h"
 #include "GL-Core/Renderer/Texture.h"
+#include "GL-Core/Renderer/Utils.h"
 
 class BRLayer : public GLCore::Layer
 {
@@ -21,5 +22,7 @@ private:
 	Renderer m_Renderer;
 	glm::mat4 m_MVP;
 	Texture m_Zero, m_One;
-	glm::vec4 m_BGColor = { 0.8f, 0.2f, 0.3f, 1.0f };
+	glm::vec4 m_BGColor = { GetNCV(216), GetNCV(251), GetNCV(241), 1.0f };
+	float m_ApplePosition[2] = { -0.6f,0.0f };
+	float m_GooglePosition[2] = { 0.6f,0.0f };
 };
