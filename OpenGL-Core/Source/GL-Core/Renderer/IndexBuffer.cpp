@@ -2,6 +2,11 @@
 
 #include "glUtils.h"
 
+std::shared_ptr<IndexBuffer> IndexBuffer::Create(const unsigned int* indices, unsigned int count)
+{
+	return std::make_shared<IndexBuffer>(indices, count);
+}
+
 IndexBuffer::IndexBuffer(const unsigned int* indices, unsigned int count):m_Count(count)
 {
 	ASSERT(sizeof(unsigned int) == sizeof(GLuint));

@@ -2,42 +2,10 @@
 
 #include <array>
 
+#include "GL-Core/Renderer/Renderer.h"
 #include "glm/gtc/matrix_transform.hpp"
 
-struct Vertex
-{
-	glm::vec3 Position;
-	glm::vec4 Color;
-	glm::vec2 TexCoord;
-	float TexID;
-};
-
-//float vertices[] =
-//{ -0.6f,-0.45f,0.0f, 0.1f,0.3f,0.5f,1.0f, 0.0f,0.0f, 0.0f,
-//  -0.1f,-0.45f,0.0f, 0.5f,0.4f,0.3f,1.0f, 1.0f,0.0f, 0.0f,
-//  -0.1f, 0.45f,0.0f, 0.1f,0.2f,0.2f,1.0f, 1.0f,1.0f, 0.0f,
-//  -0.6f, 0.45f,0.0f, 0.1f,0.1f,0.5f,1.0f, 0.0f,1.0f, 0.0f,
-//
-//  0.1f,-0.45f,0.0f, 0.5f,0.3f,0.5f,1.0f, 0.0f,0.0f, 1.0f,
-//  0.6f,-0.45f,0.0f, 0.5f,0.3f,0.5f,1.0f, 1.0f,0.0f, 1.0f,
-//  0.6f, 0.45f,0.0f, 0.5f,0.3f,0.5f,1.0f, 1.0f,1.0f, 1.0f,
-//  0.1f, 0.45f,0.0f, 0.5f,0.3f,0.5f,1.0f, 0.0f,1.0f, 1.0f
-//
-//}; 
-
-const size_t MAXQuadCount = 25;
-float iOffset = 0.0f;
-
-static void CreateQuad(std::vector<Vertex>& target,glm::vec3 position, float texID)
-{
-	float size = 0.5f;
-	target.push_back({ {position.x,-0.45+position.y,0.0f},{0.5f,0.3f,0.5f,1.0f},{0.0f,0.0f},texID });
-	target.push_back({ {position.x+size,-0.45+position.y,0.0f},{0.5f,0.3f,0.5f,1.0f},{1.0f,0.0f},texID });
-	target.push_back({ {position.x + size,0.45+position.y,0.0f},{0.5f,0.3f,0.5f,1.0f},{1.0f,1.0f},texID });
-	target.push_back({ {position.x,0.45+position.y,0.0f},{0.5f,0.3f,0.5f,1.0f},{0.0f,1.0f},texID });
-}
-
-BRLayer::BRLayer() :Layer("BRLayer"),m_MVP(glm::mat4(1)),m_Zero("Textures/apple.png"),m_One("Textures/Google.png"){}
+BRLayer::BRLayer() :Layer("BRLayer"),m_MVP(glm::mat4(1)){}
 BRLayer::~BRLayer() {}
 
 void BRLayer::OnAttach() 
@@ -46,82 +14,64 @@ void BRLayer::OnAttach()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	const size_t MAXVeretxCount = MAXQuadCount * 4;
-	const size_t MAXIndexCount = MAXQuadCount * 6;
-	
-	//m_VB = std::make_unique<VertexBuffer>(vertexPositions, 8 * 10 * sizeof(float));
-	m_VB = std::make_unique<VertexBuffer>(MAXVeretxCount * sizeof(Vertex));
-	VertexBufferLayout layout;
-	layout.Push<float>(3);
-	layout.Push<float>(4);
-	layout.Push<float>(2);
-	layout.Push<float>(1);
-
-	unsigned int indices[MAXIndexCount];
-	unsigned int offset = 0;
-	for (int i = 0; i < MAXIndexCount-5; i+=6)
-	{
-		indices[i]   = offset + 0;
-		indices[i+1] = offset + 1;
-		indices[i+2] = offset + 2;
-					   
-		indices[i+3] = offset + 2;
-		indices[i+4] = offset + 3;
-		indices[i+5] = offset + 0;
-
-		offset += 4;
-	}
-	m_VA.AddBuffer(*(m_VB.get()),layout);
-	m_IB = std::make_unique<IndexBuffer>(indices, MAXIndexCount);
-	
-	m_Zero.Bind();
-	m_One.Bind(1);
+	m_Textures.emplace_back(std::make_shared<Texture>("Textures/Google.png"));
+	m_Textures.emplace_back(std::make_shared<Texture>("Textures/apple.png"));
 
 	m_Shader = std::make_unique<Shader>("Assets/BasicTriangle.shader");
 	m_Shader->Bind();
-	int sample[2] = { 0,1};
-	m_Shader->SetUniform1iv("u_Textures", 2, sample);
+	int samplers[32];
+	for (int i = 0; i < 32; ++i)
+	{
+		samplers[i] = i;
+	}
+	m_Shader->SetUniform1iv("u_Textures", 32, samplers);
+
+	Renderer::Init();
+
 	m_MVP = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 1.0f);
 
 }
 
 void BRLayer::OnDetach()
 {
-
+	Renderer::ShutDown();
 }
 
 void BRLayer::OnUpdate()
 {
 	LOG_INFO("BRLayer: Update");
 	glClearColor(m_BGColor.x,m_BGColor.y, m_BGColor.z,m_BGColor.w);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	m_Renderer.Clear(GL_COLOR_BUFFER_BIT);
-
-	uint32_t indexCount = 0;
-	std::vector<Vertex> verticesData;
-	verticesData.reserve(MAXQuadCount * 4);
-	Vertex* buffer = verticesData.data();
-	
-	for (int i = 0; i < 5; ++i)
-	{
-		for (int j = 0; j < 5; ++j)
-		{
-			CreateQuad(verticesData, { i+iOffset,j+iOffset,0.0f }, (i + j) % 2);
-			indexCount += 6;
-		}
-	}
-	iOffset += 0.01;
-	m_VB->SetData(0, verticesData.size() * sizeof(Vertex), verticesData.data());
+	Renderer::Clear(GL_COLOR_BUFFER_BIT);
 
 	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(m_ApplePosition[0], m_ApplePosition[1], 0.0f));
-	m_MVP = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 1.0f) * model;
+	m_MVP = glm::ortho(0.0f, 40.0f, 0.0f, 30.0f, -1.0f, 1.0f) * model;
 
 	m_Shader->Bind();
+
+	Renderer::ResetStats();
+	Renderer::BeginBatch();
+
+	for(float y = 0; y < 5; y++)
+	{
+		for(float x = 0; x < 5; x++)
+		{
+			glm::vec4 color = {x/10,0.25f,y/10,1.0f};
+			Renderer::DrawQuad({ x,y }, { 1.0f,1.0f }, color);
+		}
+	}
+
+	/*for(int y = 0; y < 10; y++)
+	{
+		for(int x = 0; x < 10; x++)
+		{
+			Renderer::DrawQuad({ x+10,y+10}, { 1.0f,1.0f }, ((x + y) % 2 == 0 ? m_Textures[0] : m_Textures[1]));
+		}
+	}*/
+
+	Renderer::Endbatch();
 	m_Shader->SetUniformMat4f("u_MVP", m_MVP);
-    //m_Shader->SetUniform4f("u_Color", 1.0f, 1.0f, 1.0f, 1.0f);
-	
-	
-	m_Renderer.Draw(m_VA, *(m_IB.get()), *(m_Shader.get()));
+
+	Renderer::Flush();
 }
 
 void BRLayer::ImGuiRender()
@@ -129,9 +79,10 @@ void BRLayer::ImGuiRender()
 	ImGui::Begin("Test");
 	static bool show = true;
 	//ImGui::ShowDemoWindow(&show);
-	ImGui::ColorEdit4("Square Alternate Color",(float*)&m_BGColor);
-	ImGui::DragFloat2("Move", m_ApplePosition,0.01f);
-	ImGui::DragFloat2("Zoom", m_GooglePosition, 0.01f);
+	ImGui::ColorEdit4("BackgroundColor",(float*)&m_BGColor);
+	ImGui::DragFloat2("Move Textures", m_ApplePosition,0.01f);
+	ImGui::Text("Quads: %d", Renderer::GetStats().QuadCount);
+	ImGui::Text("DrawCalls: %d", Renderer::GetStats().DrawCount);
 	ImGui::End();
 }
 

@@ -1,6 +1,12 @@
 #include "VertexBuffer.h"
 
 #include "glUtils.h"
+
+std::shared_ptr<VertexBuffer> VertexBuffer::Create(unsigned int size)
+{
+	return std::make_shared<VertexBuffer>(size);
+}
+
 VertexBuffer::VertexBuffer(const void * Data, unsigned int size)
 {
 	GLCall(glGenBuffers(1, &m_RendererID));

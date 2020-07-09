@@ -1,7 +1,9 @@
 #pragma once
+#include "GL-Core/Core/Core.h"
 class IndexBuffer
 {
 public:
+	static std::shared_ptr<IndexBuffer> Create(const unsigned int* indices, unsigned int count);
 	IndexBuffer(const unsigned int* indices, unsigned int count);
 	~IndexBuffer();
 	void Bind() const;

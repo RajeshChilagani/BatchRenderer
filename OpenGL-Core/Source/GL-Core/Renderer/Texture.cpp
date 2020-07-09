@@ -3,6 +3,19 @@
 #include "glUtils.h"
 #include "stb_image.h"
 
+Texture::Texture(uint32_t i_Width, uint32_t i_Height): m_Width(i_Width),m_Height(i_Height)
+{
+	glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
+	glTextureStorage2D(m_RendererID, 1, GL_RGBA8, m_Width, m_Height);
+
+	glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+
+}
 Texture::Texture(const std::string& i_Filepath) :m_RendererID(0), m_Filepath(i_Filepath), m_LocalBuffer(nullptr),m_Width(0), m_Height(0), m_BPP(0)
 {
 	stbi_set_flip_vertically_on_load(1);
@@ -25,6 +38,11 @@ Texture::Texture(const std::string& i_Filepath) :m_RendererID(0), m_Filepath(i_F
 Texture::~Texture() 
 {
 	GLCall(glDeleteTextures(1, &m_RendererID));
+}
+
+void Texture::SetData(void * data, uint32_t size)
+{
+	glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, GL_RGBA, GL_UNSIGNED_BYTE, data);
 }
 void Texture::Bind(uint32_t TextureSlot) const
 {

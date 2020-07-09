@@ -16,7 +16,7 @@ int main()
 {
     std::unique_ptr<BatchRendererApp> app = std::make_unique<BatchRendererApp>("BatchRenderer",1280,720);
     app->Run();
-
+    _CrtDumpMemoryLeaks();
 }
 
 
