@@ -4,3 +4,4 @@ The application is capable of rendering large number of 2D geometry in less numb
 The application also supports
 - Logging system used for debugging. Used spdlog as the logging library with an abstracted Log class.
 - Event System to track & handle events in the application. Currently Mouse, Keyboard, & Window events are supported.
+To generate project files please run the batch script under scripts folder
