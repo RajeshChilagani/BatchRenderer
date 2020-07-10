@@ -6,7 +6,10 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 BRLayer::BRLayer() :Layer("BRLayer"),m_MVP(glm::mat4(1)){}
-BRLayer::~BRLayer() {}
+BRLayer::~BRLayer()
+{
+	std::cout << "Destoyer Called" << std::endl;
+}
 
 void BRLayer::OnAttach() 
 {
@@ -28,13 +31,10 @@ void BRLayer::OnAttach()
 
 	Renderer::Init();
 
-	m_MVP = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 1.0f);
-
 }
 
 void BRLayer::OnDetach()
 {
-	Renderer::ShutDown();
 }
 
 void BRLayer::OnUpdate()
@@ -44,29 +44,29 @@ void BRLayer::OnUpdate()
 	Renderer::Clear(GL_COLOR_BUFFER_BIT);
 
 	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(m_ApplePosition[0], m_ApplePosition[1], 0.0f));
-	m_MVP = glm::ortho(0.0f, 40.0f, 0.0f, 30.0f, -1.0f, 1.0f) * model;
+	m_MVP = glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f) * model;
 
 	m_Shader->Bind();
 
 	Renderer::ResetStats();
 	Renderer::BeginBatch();
 
-	for(float y = 0; y < 5; y++)
+	for(float y = 0; y < 15; y+=0.5)
 	{
-		for(float x = 0; x < 5; x++)
+		for(float x = 0; x < 15; x+=0.5)
 		{
 			glm::vec4 color = {x/10,0.25f,y/10,1.0f};
 			Renderer::DrawQuad({ x,y }, { 1.0f,1.0f }, color);
 		}
 	}
 
-	/*for(int y = 0; y < 10; y++)
+	for(int y = 4; y < 12; y++)
 	{
-		for(int x = 0; x < 10; x++)
+		for(int x = 4; x < 12; x++)
 		{
-			Renderer::DrawQuad({ x+10,y+10}, { 1.0f,1.0f }, ((x + y) % 2 == 0 ? m_Textures[0] : m_Textures[1]));
+			Renderer::DrawQuad({ x,y}, { 1.0f,1.0f }, ((x + y) % 2 == 0 ? m_Textures[0] : m_Textures[1]));
 		}
-	}*/
+	}
 
 	Renderer::Endbatch();
 	m_Shader->SetUniformMat4f("u_MVP", m_MVP);
@@ -76,7 +76,7 @@ void BRLayer::OnUpdate()
 
 void BRLayer::ImGuiRender()
 {
-	ImGui::Begin("Test");
+	ImGui::Begin("Debug");
 	static bool show = true;
 	//ImGui::ShowDemoWindow(&show);
 	ImGui::ColorEdit4("BackgroundColor",(float*)&m_BGColor);

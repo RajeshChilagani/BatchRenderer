@@ -36,7 +36,7 @@ void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& la
 	
 }
 
-void VertexArray::AddIndexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer, const VertexBufferLayout& layout)
+void VertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer, const VertexBufferLayout& layout)
 {
 	Bind();
 	vertexBuffer->Bind();

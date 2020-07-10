@@ -14,7 +14,7 @@ namespace GLCore
 	{
 	public:
 		Application(const std::string& i_Name="OpenGLCore", uint32_t i_Width=1280, uint32_t i_Height=720);
-		virtual ~Application()=default;
+		virtual ~Application();
 
 		void Run();
 		void OnEvent(Event& e);

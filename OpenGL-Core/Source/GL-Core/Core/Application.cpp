@@ -6,6 +6,7 @@
 #include "Log.h"
 #include "GL-Core/Events/KeyEvent.h"
 #include "GL-Core/Events/MouseEvent.h"
+#include "GL-Core/Renderer/Renderer.h"
 
 namespace GLCore
 {
@@ -25,6 +26,12 @@ namespace GLCore
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
 	}
+
+	Application::~Application()
+	{
+		Renderer::ShutDown();
+	}
+
 	void Application::Run()
 	{
 		LOG_INFO("Application Run Begin");

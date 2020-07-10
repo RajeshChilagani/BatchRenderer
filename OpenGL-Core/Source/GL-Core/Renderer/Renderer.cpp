@@ -16,7 +16,7 @@ struct QuadVertex
 
 struct RendererData
 {
-	static const uint32_t MaxQuads = 24;
+	static const uint32_t MaxQuads = 1000;
 	static const uint32_t MaxVertices = MaxQuads * 4;
 	static const uint32_t MaxIndices = MaxQuads * 6;
 	static const uint32_t MaxTextureSlots = 32; 
@@ -48,15 +48,16 @@ void Renderer::Init()
 
 	s_Data.QuadVertexBuffer = VertexBuffer::Create(s_Data.MaxVertices*sizeof(QuadVertex));
 
+
 	VertexBufferLayout layout;
 	layout.Push<float>(3);
 	layout.Push<float>(4);
 	layout.Push<float>(2);
 	layout.Push<float>(1);
 
-	s_Data.QuadVertexArray->AddIndexBuffer(s_Data.QuadVertexBuffer, layout);
+	s_Data.QuadVertexArray->AddVertexBuffer(s_Data.QuadVertexBuffer, layout);
 
-	uint32_t quadIndices[s_Data.MaxIndices];
+	uint32_t* quadIndices= new uint32_t[s_Data.MaxIndices];
 	uint32_t offset = 0;
 	for (uint32_t i = 0; i < s_Data.MaxIndices - 5; i += 6)
 	{
@@ -72,6 +73,9 @@ void Renderer::Init()
 	}
 
 	s_Data.QuadIndexBuffer = IndexBuffer::Create(quadIndices,s_Data.MaxIndices);
+
+	delete[] quadIndices;
+
 	s_Data.whiteTexture = std::make_shared<Texture>(1, 1);
 	uint32_t whiteTextureData = 0xffffffff;
 	s_Data.whiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
@@ -174,8 +178,11 @@ void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, std::s
 	for (uint32_t i = 1; i < s_Data.TextureSlotIndex; ++i)
 	{
 		if (*s_Data.TextureSlots[i].get() == *texture.get())
+		{
 			textureIndex = static_cast<float>(i);
-		break;
+			break;
+		}
+			
 	}
 
 	if (textureIndex == 0.0f)
