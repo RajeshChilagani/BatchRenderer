@@ -19,6 +19,6 @@ private:
 	std::vector<std::shared_ptr<Texture>> m_Textures;
 	glm::mat4 m_MVP;
 	glm::vec4 m_BGColor = { GetNCV(216), GetNCV(251), GetNCV(241), 1.0f };
-	float m_ApplePosition[2] = { -3.0f,-8.0f };
+	float m_ApplePosition[2] = { 0.0f,-8.0f };
 	float m_GooglePosition[2] = { 0.6f,0.0f };
 };

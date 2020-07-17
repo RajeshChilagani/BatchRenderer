@@ -2,11 +2,11 @@
 
 #include <functional>
 
-#include "Core.h"
 #include "Log.h"
 #include "GL-Core/Events/KeyEvent.h"
 #include "GL-Core/Events/MouseEvent.h"
 #include "GL-Core/Renderer/Renderer.h"
+#include "GL-Core/Core/Input.h"
 
 namespace GLCore
 {
@@ -45,12 +45,16 @@ namespace GLCore
 				layer->ImGuiRender();
 			m_ImGuiLayer->End();
 			m_Window->OnUpdate();
+
+			auto [x, y] = Input::GetMousePosition();
+			LOG_TRACE("Mouse Position {0},{1}", x, y);
+
 		}
 	}
 	
 	void Application::OnEvent(Event& e)
 	{
-		LOG_TRACE(e);
+		//LOG_TRACE(e);
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(GL_CORE_BIND_EVENT_FN(Application::OnWindowClose));
 

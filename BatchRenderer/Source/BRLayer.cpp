@@ -4,11 +4,15 @@
 
 #include "GL-Core/Renderer/Renderer.h"
 #include "glm/gtc/matrix_transform.hpp"
+#include "glfw/include/GLFW/glfw3.h"
 
-BRLayer::BRLayer() :Layer("BRLayer"),m_MVP(glm::mat4(1)){}
+BRLayer::BRLayer() :Layer("BRLayer"),m_MVP(glm::mat4(1))
+{
+	std::cout << "BRLayer Created" << std::endl;
+}
 BRLayer::~BRLayer()
 {
-	std::cout << "Destoyer Called" << std::endl;
+	std::cout << "BRLayer Destroyed" << std::endl;
 }
 
 void BRLayer::OnAttach() 
@@ -70,6 +74,7 @@ void BRLayer::OnUpdate()
 
 	Renderer::Endbatch();
 	m_Shader->SetUniformMat4f("u_MVP", m_MVP);
+	m_Shader->SetUniform1f("u_time", (float)glfwGetTime());
 
 	Renderer::Flush();
 }
@@ -88,5 +93,5 @@ void BRLayer::ImGuiRender()
 
 void BRLayer::OnEvent(GLCore::Event& e)
 {
-	LOG_TRACE(e);
+	//LOG_TRACE(e);
 }

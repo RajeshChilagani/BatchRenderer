@@ -34,6 +34,7 @@ struct RendererData
 	uint32_t TextureSlotIndex = 1; // 0 = white texture
 
 	Renderer::Stats RenderStats;
+	~RendererData() = default;
 
 };
 
@@ -91,7 +92,9 @@ void Renderer::Init()
 
 void Renderer::ShutDown()
 {
+	std::cout << "Renderer ShutDown" << std::endl;
 	delete[] s_Data.QuadVertexBufferBase;
+	s_Data.~RendererData();
 }
 
 void Renderer::BeginBatch()

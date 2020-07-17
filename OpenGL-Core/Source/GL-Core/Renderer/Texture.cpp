@@ -1,7 +1,7 @@
 #include "Texture.h"
 
 #include "glUtils.h"
-#include "stb_image.h"
+#include <stb_image.h>
 
 Texture::Texture(uint32_t i_Width, uint32_t i_Height): m_Width(i_Width),m_Height(i_Height)
 {

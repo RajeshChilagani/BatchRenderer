@@ -1,9 +1,10 @@
 #include "ImGuiLayer.h"
 
 #include "GL-Core/Core/Application.h"
-#include "imgui.h"
-#include "examples/imgui_impl_opengl3.h"
-#include "examples/imgui_impl_glfw.h"
+
+#include <imgui.h>
+#include <examples/imgui_impl_opengl3.h>
+#include <examples/imgui_impl_glfw.h>
 
 namespace GLCore
 {
