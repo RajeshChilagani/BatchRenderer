@@ -43,7 +43,7 @@ void BRLayer::OnDetach()
 
 void BRLayer::OnUpdate()
 {
-	LOG_INFO("BRLayer: Update");
+	//LOG_INFO("BRLayer: Update");
 	glClearColor(m_BGColor.x,m_BGColor.y, m_BGColor.z,m_BGColor.w);
 	Renderer::Clear(GL_COLOR_BUFFER_BIT);
 
@@ -54,6 +54,12 @@ void BRLayer::OnUpdate()
 
 	Renderer::ResetStats();
 	Renderer::BeginBatch();
+
+	if (GLCore::Input::IsKeyPressed(GLCore::Key::A))
+	{
+		LOG_TRACE("{0} is Pressed", static_cast<char>(GLCore::Key::A));
+	}
+
 
 	for(float y = 0; y < 15; y+=0.5)
 	{

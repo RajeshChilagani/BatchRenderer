@@ -45,10 +45,6 @@ namespace GLCore
 				layer->ImGuiRender();
 			m_ImGuiLayer->End();
 			m_Window->OnUpdate();
-
-			auto [x, y] = Input::GetMousePosition();
-			LOG_TRACE("Mouse Position {0},{1}", x, y);
-
 		}
 	}
 	

@@ -4,17 +4,17 @@
 #include <GLFW/glfw3.h>
 namespace GLCore
 {
-	bool Input::IsKeyPressed(int i_KeyCode)
+	bool Input::IsKeyPressed(Key i_KeyCode)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
-		auto state = glfwGetKey(window, i_KeyCode);
+		auto state = glfwGetKey(window, static_cast<int>(i_KeyCode));
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool Input::IsMouseButtonPressed(int i_MouseButton)
+	bool Input::IsMouseButtonPressed(Mouse i_MouseButton)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
-		auto state = glfwGetMouseButton(window, i_MouseButton);
+		auto state = glfwGetMouseButton(window, static_cast<int>(i_MouseButton));
 		return state == GLFW_PRESS;
 	}
 
