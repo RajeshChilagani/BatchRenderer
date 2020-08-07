@@ -23,7 +23,7 @@ public:
 	void SetUniform1i(const std::string& i_Name, int v);
 	void SetUniform1f(const std::string& i_Name, float v);
 	void SetUniform4f(const std::string& i_Name, float v1, float v2, float v3, float v4);
-	void SetUniformMat4f(const std::string& i_Name, glm::mat4& matrix);
+	void SetUniformMat4f(const std::string& i_Name, const glm::mat4& matrix);
 	void SetUniform1iv(const std::string& i_Name, int count, int* value);
 
 	unsigned int GetId() { return m_RendererID; }

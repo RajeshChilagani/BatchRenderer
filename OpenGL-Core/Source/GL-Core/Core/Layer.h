@@ -4,6 +4,7 @@
 
 #include "Core.h"
 #include "GL-Core/Events/Event.h"
+#include "Timestep.h"
 
 namespace GLCore
 {
@@ -15,7 +16,7 @@ namespace GLCore
 
 		virtual void OnAttach()  {}
 		virtual void OnDetach()  {}
-		virtual void OnUpdate()  {}
+		virtual void OnUpdate(Timestep dt)  {}
 		virtual void ImGuiRender() {}
 		virtual void OnEvent(Event& e) {}
 

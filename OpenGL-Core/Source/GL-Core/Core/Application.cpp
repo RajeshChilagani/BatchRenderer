@@ -7,6 +7,7 @@
 #include "GL-Core/Events/MouseEvent.h"
 #include "GL-Core/Renderer/Renderer.h"
 #include "GL-Core/Core/Input.h"
+#include <GLFW/glfw3.h>
 
 namespace GLCore
 {
@@ -35,10 +36,16 @@ namespace GLCore
 	void Application::Run()
 	{
 		LOG_INFO("Application Run Begin");
+		
+
 		while (m_Running)
 		{
+			float time = (float)glfwGetTime();
+			Timestep frameTime = time - m_LastFrameTime;
+			m_LastFrameTime = time;
+
 			for (Layer* layer : m_LayerStack)
-				layer->OnUpdate();
+				layer->OnUpdate(frameTime);
 
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)

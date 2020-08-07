@@ -7,6 +7,7 @@
 #include "GL-Core/ImGui/ImGuiLayer.h"
 #include "LayerStack.h"
 #include "Window.h"
+#include "Timestep.h"
 
 namespace GLCore
 {
@@ -30,6 +31,7 @@ namespace GLCore
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 		ImGuiLayer* m_ImGuiLayer;
+		Timestep m_LastFrameTime = 0.0f;
 	private:
 		static Application* s_Instance;
 	};

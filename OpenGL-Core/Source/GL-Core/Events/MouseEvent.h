@@ -27,7 +27,7 @@ namespace GLCore
 	public:
 		MouseScrolledEvent(float i_XOffset, float i_YOffset) :m_XOffset(i_XOffset), m_YOffset(i_YOffset) {}
 		inline float GetXOffset() const { return m_XOffset; }
-		inline float GetYOffet() const { return m_YOffset; }
+		inline float GetYOffset() const { return m_YOffset; }
 		std::string ToString() const override
 		{
 			std::stringstream ss;

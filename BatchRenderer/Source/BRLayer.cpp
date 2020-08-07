@@ -3,10 +3,11 @@
 #include <array>
 
 #include "GL-Core/Renderer/Renderer.h"
+#include "GL-Core/Renderer/Utils.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glfw/include/GLFW/glfw3.h"
 
-BRLayer::BRLayer() :Layer("BRLayer"),m_MVP(glm::mat4(1))
+BRLayer::BRLayer() :Layer("BRLayer"), m_CameraController((uint32_t)1280,720,true)
 {
 	std::cout << "BRLayer Created" << std::endl;
 }
@@ -33,7 +34,7 @@ void BRLayer::OnAttach()
 	}
 	m_Shader->SetUniform1iv("u_Textures", 32, samplers);
 
-	Renderer::Init();
+	GLCore::Renderer::Init();
 
 }
 
@@ -41,32 +42,40 @@ void BRLayer::OnDetach()
 {
 }
 
-void BRLayer::OnUpdate()
+void BRLayer::OnUpdate(GLCore::Timestep dt)
 {
 	//LOG_INFO("BRLayer: Update");
 	glClearColor(m_BGColor.x,m_BGColor.y, m_BGColor.z,m_BGColor.w);
-	Renderer::Clear(GL_COLOR_BUFFER_BIT);
+	GLCore::Renderer::Clear(GL_COLOR_BUFFER_BIT);
+
+	m_CameraController.OnUpdate(dt);
 
 	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(m_ApplePosition[0], m_ApplePosition[1], 0.0f));
-	m_MVP = glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f) * model;
 
 	m_Shader->Bind();
 
-	Renderer::ResetStats();
-	Renderer::BeginBatch();
+	GLCore::Renderer::ResetStats();
+	GLCore::Renderer::BeginBatch(m_CameraController.GetCamera());
+	m_Shader->SetUniformMat4f("u_VP", m_CameraController.GetCamera().GetViewProjectionMatrix());
 
 	if (GLCore::Input::IsKeyPressed(GLCore::Key::A))
 	{
 		LOG_TRACE("{0} is Pressed", static_cast<char>(GLCore::Key::A));
 	}
 
+	GLCore::Renderer::DrawQuad({ -14.0f,14.0f }, { 5.0f,5.0f }, {1.0f,1.0f,1.0f,1.0f});
 
-	for(float y = 0; y < 15; y+=0.5)
+	static float i = 0;
+	
+	i += 0.01;//RandomInRange(1.0f,12.0f);
+	if (i > 15)
+		i = 0.0f;
+	for(float y = i; y < 15; y+=1)
 	{
-		for(float x = 0; x < 15; x+=0.5)
+		for(float x = i; x < 15; x+=1)
 		{
 			glm::vec4 color = {x/10,0.25f,y/10,1.0f};
-			Renderer::DrawQuad({ x,y }, { 1.0f,1.0f }, color);
+			GLCore::Renderer::DrawQuad({ x,y }, { 1.0f,1.0f }, color);
 		}
 	}
 
@@ -74,15 +83,14 @@ void BRLayer::OnUpdate()
 	{
 		for(int x = 4; x < 12; x++)
 		{
-			Renderer::DrawQuad({ x,y}, { 1.0f,1.0f }, ((x + y) % 2 == 0 ? m_Textures[0] : m_Textures[1]));
+			GLCore::Renderer::DrawQuad({ x,y}, { 1.0f,1.0f }, ((x + y) % 2 == 0 ? m_Textures[0] : m_Textures[1]));
 		}
 	}
-
-	Renderer::Endbatch();
-	m_Shader->SetUniformMat4f("u_MVP", m_MVP);
+	m_Shader->SetUniformMat4f("u_M", model);
 	m_Shader->SetUniform1f("u_time", (float)glfwGetTime());
 
-	Renderer::Flush();
+	GLCore::Renderer::Endbatch();
+	
 }
 
 void BRLayer::ImGuiRender()
@@ -92,12 +100,13 @@ void BRLayer::ImGuiRender()
 	//ImGui::ShowDemoWindow(&show);
 	ImGui::ColorEdit4("BackgroundColor",(float*)&m_BGColor);
 	ImGui::DragFloat2("Move Textures", m_ApplePosition,0.01f);
-	ImGui::Text("Quads: %d", Renderer::GetStats().QuadCount);
-	ImGui::Text("DrawCalls: %d", Renderer::GetStats().DrawCount);
+	ImGui::Text("Quads: %d", GLCore::Renderer::GetStats().QuadCount);
+	ImGui::Text("DrawCalls: %d", GLCore::Renderer::GetStats().DrawCount);
 	ImGui::End();
 }
 
 void BRLayer::OnEvent(GLCore::Event& e)
 {
 	//LOG_TRACE(e);
+	m_CameraController.OnEvent(e);
 }
