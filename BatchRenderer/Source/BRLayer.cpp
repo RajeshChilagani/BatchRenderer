@@ -44,13 +44,15 @@ void BRLayer::OnDetach()
 
 void BRLayer::OnUpdate(GLCore::Timestep dt)
 {
+	/*glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(2.0, 5.0f, 0.0f));
+	glm::vec3 finalpos = transform * glm::vec4(2.0f, 4.0f, 0.0f,1.0f);
+	LOG_TRACE("{0}:{1}", finalpos.x, finalpos.y);*/
 	//LOG_INFO("BRLayer: Update");
 	glClearColor(m_BGColor.x,m_BGColor.y, m_BGColor.z,m_BGColor.w);
 	GLCore::Renderer::Clear(GL_COLOR_BUFFER_BIT);
 
 	m_CameraController.OnUpdate(dt);
 
-	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(m_ApplePosition[0], m_ApplePosition[1], 0.0f));
 
 	m_Shader->Bind();
 
@@ -63,7 +65,7 @@ void BRLayer::OnUpdate(GLCore::Timestep dt)
 		LOG_TRACE("{0} is Pressed", static_cast<char>(GLCore::Key::A));
 	}
 
-	GLCore::Renderer::DrawQuad({ -14.0f,14.0f }, { 5.0f,5.0f }, {1.0f,1.0f,1.0f,1.0f});
+	GLCore::Renderer::DrawQuad({m_SquarePosition[0],m_SquarePosition[1]}, { 5.0f,5.0f }, {1.0f,1.0f,1.0f,1.0f});
 
 	static float i = 0;
 	
@@ -75,7 +77,7 @@ void BRLayer::OnUpdate(GLCore::Timestep dt)
 		for(float x = i; x < 15; x+=1)
 		{
 			glm::vec4 color = {x/10,0.25f,y/10,1.0f};
-			GLCore::Renderer::DrawQuad({ x,y }, { 1.0f,1.0f }, color);
+			GLCore::Renderer::DrawQuad({ x + m_BatchPosition[0],y + m_BatchPosition[1] }, { 1.0f,1.0f }, color);
 		}
 	}
 
@@ -83,10 +85,9 @@ void BRLayer::OnUpdate(GLCore::Timestep dt)
 	{
 		for(int x = 4; x < 12; x++)
 		{
-			GLCore::Renderer::DrawQuad({ x,y}, { 1.0f,1.0f }, ((x + y) % 2 == 0 ? m_Textures[0] : m_Textures[1]));
+			GLCore::Renderer::DrawQuad({ x+m_BatchPosition[0],y+m_BatchPosition[1]}, { 1.0f,1.0f }, ((x + y) % 2 == 0 ? m_Textures[0] : m_Textures[1]));
 		}
 	}
-	m_Shader->SetUniformMat4f("u_M", model);
 	m_Shader->SetUniform1f("u_time", (float)glfwGetTime());
 
 	GLCore::Renderer::Endbatch();
@@ -99,7 +100,8 @@ void BRLayer::ImGuiRender()
 	static bool show = true;
 	//ImGui::ShowDemoWindow(&show);
 	ImGui::ColorEdit4("BackgroundColor",(float*)&m_BGColor);
-	ImGui::DragFloat2("Move Textures", m_ApplePosition,0.01f);
+	ImGui::DragFloat2("Move Batch", m_BatchPosition,0.01f);
+	ImGui::DragFloat2("Move Square", m_SquarePosition, 0.01f);
 	ImGui::Text("Quads: %d", GLCore::Renderer::GetStats().QuadCount);
 	ImGui::Text("DrawCalls: %d", GLCore::Renderer::GetStats().DrawCount);
 	ImGui::End();

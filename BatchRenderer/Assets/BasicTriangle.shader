@@ -18,7 +18,7 @@ void main()
 	v_Color = a_Color;
 	v_TexCoord = a_TexCoord;
 	v_TexIndex = a_TexIndex;
-	gl_Position = u_VP * u_M * position;
+	gl_Position = u_VP * position;
 };
 
 #shader fragment
