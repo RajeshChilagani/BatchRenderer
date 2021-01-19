@@ -38,6 +38,14 @@ namespace GLCore
 		{
 			m_CameraPosition.y -= m_CameraTranslationSpeed;
 		}
+		else if (Input::IsKeyPressed(KeyCode::Z))
+		{
+			m_CameraPosition.z -= m_CameraTranslationSpeed;
+		}
+		else if (Input::IsKeyPressed(KeyCode::C))
+		{
+			m_CameraPosition.z += m_CameraTranslationSpeed;
+		}
 
 		if (m_Rotation)
 		{

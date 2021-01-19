@@ -50,7 +50,8 @@ namespace GLCore
 			s_GLFWInitialized = true;
 			
 		}
-		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, props.Title.c_str(), nullptr, nullptr);
+		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, props.Title.c_str(),nullptr, nullptr);
+		//glfwMaximizeWindow(m_Window);
 		glfwMakeContextCurrent(m_Window);
 
 		int gladStatus = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));

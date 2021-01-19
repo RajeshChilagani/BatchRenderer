@@ -24,7 +24,7 @@ VertexBuffer::VertexBuffer(unsigned int size)
 void VertexBuffer::SetData(unsigned int Offset, unsigned int Size, const void* Data)
 {
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_RendererID));
-	GLCall(glBufferSubData(GL_ARRAY_BUFFER, Offset, Size, Data))
+	GLCall(glBufferData(GL_ARRAY_BUFFER, Size, Data, GL_DYNAMIC_DRAW))
 }
 
 VertexBuffer::~VertexBuffer()

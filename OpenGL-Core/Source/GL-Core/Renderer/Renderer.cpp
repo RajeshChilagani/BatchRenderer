@@ -3,6 +3,7 @@
 #include <array>
 
 #include "GL-Core/Core/Core.h"
+#include "GL-Core/Core/Log.h"
 #include "VertexBuffer.h"
 #include "glUtils.h"
 
@@ -23,7 +24,7 @@ namespace GLCore
 
 	struct RendererData
 	{
-		static const uint32_t MaxQuads = 1000;
+		static constexpr uint32_t MaxQuads = 10000;
 		static const uint32_t MaxVertices = MaxQuads * 4;
 		static const uint32_t MaxIndices = MaxQuads * 6;
 		static const uint32_t MaxTextureSlots = 32;
@@ -48,10 +49,11 @@ namespace GLCore
 	};
 
 	static RendererData s_Data;
+	static QuadVertex VertexDataBase[s_Data.MaxVertices];
 
 	void Renderer::Init()
 	{
-		s_Data.QuadVertexBufferBase = new QuadVertex[s_Data.MaxVertices];
+		s_Data.QuadVertexBufferBase = VertexDataBase;
 
 		s_Data.QuadVertexArray = VertexArray::Create();
 		s_Data.QuadVertexArray->Bind();
@@ -107,11 +109,11 @@ namespace GLCore
 	void Renderer::ShutDown()
 	{
 		std::cout << "Renderer ShutDown" << std::endl;
-		delete[] s_Data.QuadVertexBufferBase;
+		//delete[] s_Data.QuadVertexBufferBase;
 		s_Data.~RendererData();
 	}
 
-	void Renderer::BeginBatch(const OrthographicCamera& camera)
+	void Renderer::BeginBatch(const Camera& camera)
 	{
 		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
 		s_Data.QuadIndexCount = 0;
@@ -123,9 +125,11 @@ namespace GLCore
 
 	void Renderer::Endbatch()
 	{
+		uint32_t CountOfVerteices = s_Data.QuadVertexBufferPtr - s_Data.QuadVertexBufferBase;
 		uint32_t size = (s_Data.QuadVertexBufferPtr - s_Data.QuadVertexBufferBase) * sizeof(QuadVertex);
 		//uint32_t size = ((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
 		s_Data.QuadVertexBuffer->SetData(0, size, s_Data.QuadVertexBufferBase);
+		memset(s_Data.QuadVertexBufferBase,0,960);
 
 		Flush();
 	}
@@ -155,6 +159,11 @@ namespace GLCore
 	void Renderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
 	{
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(position,0.0f)) * glm::scale(glm::mat4(1.0f),glm::vec3(size,1.0f));
+		DrawQuad(transform, color);
+	}
+	void Renderer::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
+	{
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), glm::vec3(size, 1.0f));
 		DrawQuad(transform, color);
 	}
 

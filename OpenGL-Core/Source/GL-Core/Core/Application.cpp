@@ -42,6 +42,7 @@ namespace GLCore
 		{
 			float time = (float)glfwGetTime();
 			Timestep frameTime = time - m_LastFrameTime;
+			//LOG_TRACE("FrameTime:{0}",frameTime);
 			m_LastFrameTime = time;
 
 			for (Layer* layer : m_LayerStack)

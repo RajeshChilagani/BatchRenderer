@@ -2,12 +2,18 @@
 
 #include <array>
 
-#include "GL-Core/Renderer/Renderer.h"
-#include "GL-Core/Renderer/Utils.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glfw/include/GLFW/glfw3.h"
 
-BRLayer::BRLayer() :Layer("BRLayer"), m_CameraController((uint32_t)1280,720,true)
+#include "GL-Core/Renderer/Renderer.h"
+#include "GL-Core/Renderer/Utils.h"
+#include "GL-Core/Renderer/EditorCamera.h"
+
+
+BRLayer::BRLayer() 
+	: Layer("BRLayer")
+	, m_EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f)
+	, m_CameraController(1280.f, 720.f, true)
 {
 	std::cout << "BRLayer Created" << std::endl;
 }
@@ -44,50 +50,49 @@ void BRLayer::OnDetach()
 
 void BRLayer::OnUpdate(GLCore::Timestep dt)
 {
-	/*glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(2.0, 5.0f, 0.0f));
-	glm::vec3 finalpos = transform * glm::vec4(2.0f, 4.0f, 0.0f,1.0f);
-	LOG_TRACE("{0}:{1}", finalpos.x, finalpos.y);*/
-	//LOG_INFO("BRLayer: Update");
 	glClearColor(m_BGColor.x,m_BGColor.y, m_BGColor.z,m_BGColor.w);
 	GLCore::Renderer::Clear(GL_COLOR_BUFFER_BIT);
 
-	m_CameraController.OnUpdate(dt);
-
+	//m_CameraController.OnUpdate(dt);
+	m_EditorCamera.OnUpdate(dt);
 
 	m_Shader->Bind();
-
 	GLCore::Renderer::ResetStats();
-	GLCore::Renderer::BeginBatch(m_CameraController.GetCamera());
-	m_Shader->SetUniformMat4f("u_VP", m_CameraController.GetCamera().GetViewProjectionMatrix());
+	GLCore::Renderer::BeginBatch(m_EditorCamera);
+	//m_Shader->SetUniformMat4f("u_VP", m_CameraController.GetCamera().GetViewProjectionMatrix());
+	m_Shader->SetUniformMat4f("u_VP", m_EditorCamera.GetViewProjection());
 
 	if (GLCore::Input::IsKeyPressed(GLCore::Key::A))
 	{
 		LOG_TRACE("{0} is Pressed", static_cast<char>(GLCore::Key::A));
 	}
 
-	GLCore::Renderer::DrawQuad({m_SquarePosition[0],m_SquarePosition[1]}, { 5.0f,5.0f }, {1.0f,1.0f,1.0f,1.0f});
+	GLCore::Renderer::DrawQuad({m_SquarePosition[0],m_SquarePosition[1]}, glm::vec2(1.f,1.f), m_Textures[0]);
 
-	static float i = 0;
-	
-	i += 0.01;//RandomInRange(1.0f,12.0f);
-	if (i > 15)
-		i = 0.0f;
-	for(float y = i; y < 15; y+=1)
+	/*static float i = 10;
+	if (i <= 0)
+		i = 10.0f;
+	int counter = 0;
+	for(float y = i; y > 0; y--)
 	{
-		for(float x = i; x < 15; x+=1)
+		counter++;
+		for(float x = i; x > 0; x--)
 		{
 			glm::vec4 color = {x/10,0.25f,y/10,1.0f};
 			GLCore::Renderer::DrawQuad({ x + m_BatchPosition[0],y + m_BatchPosition[1] }, { 1.0f,1.0f }, color);
 		}
 	}
+	i -= 0.1f;*/
 
-	for(int y = 4; y < 12; y++)
+
+	/*for (int y = 0; y < 4; y++)
 	{
-		for(int x = 4; x < 12; x++)
+		for (int x = 0; x < 4; x++)
 		{
-			GLCore::Renderer::DrawQuad({ x+m_BatchPosition[0],y+m_BatchPosition[1]}, { 1.0f,1.0f }, ((x + y) % 2 == 0 ? m_Textures[0] : m_Textures[1]));
+			GLCore::Renderer::DrawQuad({ x + m_BatchPosition[0],y + m_BatchPosition[1] }, { 1.0f,1.0f }, ((x + y) % 2 == 0 ? m_Textures[0] : m_Textures[1]));
 		}
 	}
+	*/
 	m_Shader->SetUniform1f("u_time", (float)glfwGetTime());
 
 	GLCore::Renderer::Endbatch();
@@ -110,5 +115,6 @@ void BRLayer::ImGuiRender()
 void BRLayer::OnEvent(GLCore::Event& e)
 {
 	//LOG_TRACE(e);
-	m_CameraController.OnEvent(e);
+	//m_CameraController.OnEvent(e);
+	m_EditorCamera.OnEvent(e);
 }

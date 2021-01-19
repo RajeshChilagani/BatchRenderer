@@ -31,8 +31,8 @@ namespace GLCore
 		OrthographicCamera m_Camera;
 
 		bool m_Rotation;
-		glm::vec3 m_CameraPosition{1.0f,1.0f,1.0f};
+		glm::vec3 m_CameraPosition{0.0f,0.0f,0.0f};
 		float m_CameraRotation=0.0f;               //rotation in degrees
-		float m_CameraTranslationSpeed = 1.0f, m_CameraRotationSpeed = 90.0f;
+		float m_CameraTranslationSpeed = 0.1f, m_CameraRotationSpeed = 90.0f;
 	};
 }
